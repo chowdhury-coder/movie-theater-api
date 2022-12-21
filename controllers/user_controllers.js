@@ -30,7 +30,7 @@ module.exports.update_user_shows = async (req, res) =>{
     if(user){
         if(show){
             await user.addShow(show)
-            res.send(`The show with id: ${show} has been added as watched for user id: ${user}`)
+            res.send(`The show with id: ${show.id} has been added as watched for user id: ${user.id}`)
         }else{
             res.status(404).send(`Invalid show id`)
         }

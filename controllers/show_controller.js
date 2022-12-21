@@ -66,3 +66,21 @@ module.exports.updates_show_status = async (req, res) =>{
     }
 
 }
+module.exports.updates_show_rating = async (req, res) =>{
+    // get ratings from request body
+
+    const { rating } = req.body
+    if(rating < 1 || rating > 10){
+        return res.status(400).json({error: "Rating must be between 1 - 10"})
+    }
+
+    const show = await Show.findByPk(req.params.id)
+
+    if(show.userId === null){
+        return res.status(400).json({error: "Watch the show to enable you give ratings!"})
+    }
+    const showWatched = await show.update({
+        rating: rating
+    })
+    return res.status(200).json(showWatched)
+}
