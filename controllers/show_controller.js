@@ -48,19 +48,21 @@ module.exports.delete_show = async (req, res) =>{
 
 module.exports.updates_show_status = async (req, res) =>{
     const show = await Show.findByPk(req.params.id)
+    // Get status from request body
+
+    const { status } = req.body
+
+    if(status.trim() === ''){
+        return res.status(400).json({error:'Status field cannot be empty'})
+    }
+    if(status.length < 5 || status.length > 25){
+        return res.status(400).json({error:'Status field must be between 5 and 25 characters'})
+    }
 
     if (show) {
-        if (show.status === 'on-going'){
-            show.status = 'canceled'
-            await show.save()
-            return res.status(200).send(`Show id: ${req.params.id} is updated`)
-        }
-        if (show.status === 'cancelled'){
-            show.status = 'on-going'
-            await show.save()
-            return res.status(200).send(`Show id: ${req.params.id} is updated`)
-        }
-
+        show.status = status
+        await show.save()
+        return res.status(200).send(`Show id: ${req.params.id} is updated`)
     } else {
         return res.status(404).send(`Invalid Show id: ${req.params.id}.`);
     }
