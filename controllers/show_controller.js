@@ -70,6 +70,9 @@ module.exports.updates_show_rating = async (req, res) =>{
     // get ratings from request body
 
     const { rating } = req.body
+    if(rating.trim() === ''){
+        return res.status(400).json({error: "Status field cannot be empty or contain whitespace"})
+    }
     if(rating < 1 || rating > 10){
         return res.status(400).json({error: "Rating must be between 1 - 10"})
     }
